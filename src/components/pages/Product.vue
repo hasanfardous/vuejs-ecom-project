@@ -32,6 +32,24 @@
         </tr>
 
         <tr>
+          <td>Product Image</td>
+          <td>
+            <input type="file" @change="select_image">
+          </td>
+        </tr>
+
+        <tr>
+          <td></td>
+          <td>
+            <progress :value="percentage" max="100" v-if="percentage != 0 && percentage != 100"></progress>
+            <span v-if="percentage != 0 && percentage != 100">{{percentage}} %</span><br><br>
+            <img :src="newProduct.image" width="100" alt="Product Image">
+          </td>
+        </tr>
+
+        
+
+        <tr>
           <td>Product Description</td>
           <td>
             <textarea v-model="newProduct.description" placeholder="Write Product Description"></textarea>
@@ -130,11 +148,12 @@ export default {
         supplier: '',
         price: 0,
         negotiable: true,
-        image: 'img/assets/upload/default.jpg',
+        image: '/static/img/logo.png',
         description: ''
       },
       clickedProduct: {},
       products: [],
+      percentage: 0,
       all_categories: [],
       all_suppliers: []
       
@@ -196,6 +215,23 @@ export default {
 
           this.products = res.data.all_products;
         };
+      });
+    },
+
+
+    //Saving product image
+    select_image(event){
+      this.newProduct.image = event.target.files[0];
+      const fd = new FormData();
+      fd.append('singleImage', this.newProduct.image, this.newProduct.image.name);
+      this.$axios.post('http://localhost:3002/products/add_image', fd, {
+        onUploadProgress: uploadEvent => {
+          this.percentage = Math.round(uploadEvent.loaded / uploadEvent.total * 100);
+        }
+      }).then(res=>{
+        console.log(res);
+        this.newProduct.image = '../../../../' + res.data.imageUrl;
+        
       });
     },
 
