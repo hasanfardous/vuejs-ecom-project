@@ -12,7 +12,7 @@
           <td>
             <select id="prodCat" v-model="newProduct.category">
               <option value="">--Select Category--</option>
-              <option v-for="c in all_categories" value="c._id">
+              <option v-for="c in all_categories" :value="c._id">
                 {{c.name}}
               </option>
             </select>
@@ -24,7 +24,7 @@
           <td>
             <select id="prodSupp" v-model="newProduct.supplier">
               <option value="">--Select Supplier--</option>
-              <option v-for="s in all_suppliers" value="s._id">
+              <option v-for="s in all_suppliers" :value="s._id">
                 {{s.name}}
               </option>
             </select>
@@ -42,12 +42,11 @@
           <td></td>
           <td>
             <progress :value="percentage" max="100" v-if="percentage != 0 && percentage != 100"></progress>
-            <span v-if="percentage != 0 && percentage != 100">{{percentage}} %</span><br><br>
-            <img :src="newProduct.image" width="100" alt="Product Image">
+            <span v-if="percentage != 0 && percentage != 100">{{percentage}} %<br><br></span>
+            <img :src="newProduct.image" width="250" alt="Product Image">
           </td>
         </tr>
 
-        
 
         <tr>
           <td>Product Description</td>
@@ -229,22 +228,17 @@ export default {
           this.percentage = Math.round(uploadEvent.loaded / uploadEvent.total * 100);
         }
       }).then(res=>{
-        console.log(res);
-        this.newProduct.image = '../../../../' + res.data.imageUrl;
-        
+        this.newProduct.image = 'http://localhost:3002/' + res.data.imageUrl;
       });
     },
 
-
     //Add new product
     addNewProduct(){
-      console.log(this.newProduct);
-
       this.$eventBus.$emit('loadingStatus', true);
+      console.log(this.newProduct);
       this.$axios.post('http://localhost:3002/products/add_new', this.newProduct).then(res=>{
           this.$eventBus.$emit('loadingStatus', false);
           this.showingAddModal = false;
-          console.log(res);
           if (res.data.error) {
             this.$izitoast.error({
               title: 'Error',
@@ -252,6 +246,7 @@ export default {
             });
           } else{
             // localStorage.setItem("token", res.data.token);
+            console.log(this.newProduct);
             this.$izitoast.success({
               title: 'Success',
               message: res.data.message
