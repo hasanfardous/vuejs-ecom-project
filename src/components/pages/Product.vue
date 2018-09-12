@@ -4,7 +4,7 @@
       <table>
         <tr>
           <td>Product Name</td>
-          <td><input type="text" id="newCatName" class="" v-model="newProduct.name" placeholder="Product Name"></td>
+          <td><input type="text" id="newCatName" class="" v-model="newProduct.prname" placeholder="Product Name"></td>
         </tr>
 
         <tr>
@@ -28,6 +28,14 @@
                 {{s.name}}
               </option>
             </select>
+          </td>
+        </tr>
+
+        <tr>
+          <td>Product Price</td>
+          <td>
+            <input type="text" id="newCatName" class="" v-model="newProduct.price" placeholder="Product Name">
+            <input type="checkbox" id="negotiable" class="" v-model="newProduct.negotiable"> Negotiable
           </td>
         </tr>
 
@@ -116,6 +124,10 @@
       <tr>
         <th>Id</th>
         <th>Name</th>
+        <th>Category</th>
+        <th>Supplier</th>
+        <th>Price</th>
+        <th>Image</th>
         <th>Description</th>
         <th>Edit</th>
         <th>Delete</th>
@@ -124,6 +136,10 @@
       <tr v-for="product in products">
         <td>{{product._id}}</td>
         <td>{{product.name}}</td>
+        <td>{{product.category.name}}</td>
+        <td>{{product.supplier.name}}</td>
+        <td>{{product.price}}</td>
+        <td><img :src="product.image" width="50" alt=""></td>
         <td>{{product.description}}</td>
         <td><button class="edit" @click="showingEditModal = true; clickedProduct = product">Edit</button></td>
         <td><button class="delete" @click="showingDeleteModal = true; clickedProduct = product">Delete</button></td>
@@ -142,7 +158,7 @@ export default {
       showingEditModal: false,
       showingDeleteModal: false,
       newProduct: {
-        name: '',
+        prname: '',
         category: '',
         supplier: '',
         price: 0,
